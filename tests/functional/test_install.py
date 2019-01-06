@@ -748,6 +748,20 @@ def test_install_nonlocal_compatible_wheel(script, data):
     assert result.returncode == ERROR
 
 
+def test_install_compatible_wheel_custom_platform_no_target(script, data):
+    result = script.pip(
+        'install',
+        '--no-index', '--find-links', data.find_links,
+        '--only-binary=:all:',
+        '--platform', 'fakeplat2',
+        'simplewheel',
+    )
+    assert result.returncode == SUCCESS
+
+    distinfo = script.site_packages / 'simplewheel-2.0.post2.dist-info'
+    assert distinfo in result.files_created
+
+
 def test_install_nonlocal_compatible_wheel_path(script, data):
     target_dir = script.scratch_path / 'target'
 
